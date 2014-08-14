@@ -1,4 +1,4 @@
-package org.artem.eugen.article7gsondeserialization;
+package org.baeldung.gson.deserialization;
 
 import java.util.ArrayList;
 
