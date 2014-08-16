@@ -3,11 +3,11 @@ package org.baeldung.gson.deserialization;
 import java.util.ArrayList;
 
 
-public class ClassWithArrayList {
-    
+class ClassWithArrayList {
+
     ArrayList<Integer> list;
 
-    public ClassWithArrayList(ArrayList<Integer> list) {
+    ClassWithArrayList(ArrayList<Integer> list) {
         this.list = list;
     }
 

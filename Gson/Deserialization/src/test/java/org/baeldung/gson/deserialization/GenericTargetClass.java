@@ -1,14 +1,13 @@
 package org.baeldung.gson.deserialization;
 
 /**
- *
  * @author artem
  */
-public class GenericTargetClass<Integer> {
+class GenericTargetClass<Integer> {
 
-    int intField;
+    private int intField;
 
-    public GenericTargetClass(int i) {
+    GenericTargetClass(int i) {
         intField = i;
     }
 

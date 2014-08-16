@@ -1,14 +1,13 @@
 package org.baeldung.gson.deserialization;
 
 /**
- *
  * @author artem
  */
-public class TargetClass {
+class TargetClass {
     int intValue;
     String stringValue;
 
-    public TargetClass(int intValue, String stringValue) {
+    TargetClass(int intValue, String stringValue) {
         this.intValue = intValue;
         this.stringValue = stringValue;
     }
