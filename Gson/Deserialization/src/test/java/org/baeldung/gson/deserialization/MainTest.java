@@ -20,7 +20,7 @@ public class MainTest {
     }
 
     @Test
-    public void testGivenJasonWithArray_whenGsonDeserializes_thenMapsToArrayList() {
+    public void givenJasonWithArray_whenGsonDeserializes_thenMapsToArrayList() {
         String jsonSourceObject = "{\"array\":[1,2,3]}";
         ArrayList<Integer> list = new ArrayList<>();
         JsonElement jElement = new JsonParser().parse(jsonSourceObject);
@@ -35,7 +35,7 @@ public class MainTest {
     }
 
     @Test
-    public void testGivenJasonHasDissimilarFieldNamesButGsonMapsRight_whenDeserializing_thenCorrect() {
+    public void givenJasonHasDissimilarFieldNamesButGsonMapsRight_whenDeserializing_thenCorrect() {
         String jsonSourceObject = "{\"valueInt\":7,\"valueString\":\"seven\"}";
         TargetClass targetObject;
         JsonParser jParser = new JsonParser();
@@ -48,13 +48,13 @@ public class MainTest {
     }
 
     @Test
-    public void testGivenJsonHasExtraValuesButGsonIsIgnoringExtras_whenDeserializing_thenCorrect() {
+    public void givenJsonHasExtraValuesButGsonIsIgnoringExtras_whenDeserializing_thenCorrect() {
         String serializedSourceObject = "{\"intValue\":1,\"stringValue\":\"one\",\"extraString\":\"two\",\"extraFloat\":2.2}";
         TargetClass targetObject = new Gson().fromJson(serializedSourceObject, TargetClass.class);
     }
 
     @Test
-    public void testGivenUsingGson_whenDeserializingGeneric_thenCorrect() {
+    public void givenUsingGson_whenDeserializingGeneric_thenCorrect() {
         java.lang.reflect.Type genericTargetClassType = new TypeToken<GenericTargetClass<Integer>>() {
         }.getType();
         String serializedSourceObject = "{\"intField\":1}";
@@ -63,7 +63,7 @@ public class MainTest {
     }
 
     @Test
-    public void testGivenUsingGson_whenDeserializingCollection_thenCorrect() {
+    public void givenUsingGson_whenDeserializingCollection_thenCorrect() {
         String serializedSourceCollection = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
         java.lang.reflect.Type targetClassType = new TypeToken<ArrayList<TargetClass>>() {
         }.getType();
