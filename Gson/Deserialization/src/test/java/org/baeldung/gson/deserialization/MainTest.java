@@ -7,8 +7,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Test;
+import org.hamcrest.Matchers;
+import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -31,6 +36,12 @@ public class MainTest {
             list.add(i);
         }
         ClassWithArrayList targetObject = new ClassWithArrayList(list);
+
+        Object[] testArray = new Object[jArray.size()];
+        for (int i = 0; i < jArray.size(); i++) {
+            testArray[i] = jArray.get(i).getAsInt();
+        }
+        assertTrue(Arrays.equals(testArray, targetObject.list.toArray()));
 
     }
 
