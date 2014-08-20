@@ -36,13 +36,12 @@ public class GsonDeserializationTest {
             int i = jsonElement.getAsInt();
             list.add(i);
         }
-        ClassWithArrayList targetObject = new ClassWithArrayList(list);
 
-        Object[] testArray = new Object[jArray.size()];
+        Integer[] testArray = new Integer[jArray.size()];
         for (int i = 0; i < jArray.size(); i++) {
             testArray[i] = jArray.get(i).getAsInt();
         }
-        assertArrayEquals(testArray, targetObject.list.toArray());
+        assertArrayEquals(testArray, list.toArray());
     }
 
     @Test
@@ -76,7 +75,6 @@ public class GsonDeserializationTest {
         }
     }
 
-    //TODO
     @Test
     public void givenUsingGson_whenDeserializingGeneric_thenCorrect() {
         Type genericTargetClassType = new TypeToken<GenericTargetClass<Integer>>() {
