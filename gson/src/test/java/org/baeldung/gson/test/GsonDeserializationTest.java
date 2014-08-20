@@ -1,6 +1,7 @@
 package org.baeldung.gson.test;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,6 +25,22 @@ import static org.junit.Assert.assertThat;
  * @author artem
  */
 public class GsonDeserializationTest {
+
+    @Test
+    public void givenJasonHasDissimilarFieldNamesButGsonMapsRight_whenUsingCustomDeserializer_thenCorrect() {
+        final String jsonSourceObject = "{\"valueInt\":7,\"valueString\":\"seven\"}";
+        GsonBuilder gsonBldr = new GsonBuilder();
+        gsonBldr.registerTypeAdapter(TargetClass.class, new TargetClassDeserializer());
+        Gson gson = gsonBldr.create();
+        TargetClass targetObject = gson.fromJson(jsonSourceObject, TargetClass.class);
+
+        //test
+        JsonElement jElement = new JsonParser().parse(jsonSourceObject);
+        JsonObject jObject = jElement.getAsJsonObject();
+
+        assertEquals(jObject.get("valueInt").getAsInt(), targetObject.intValue);
+        assertEquals(jObject.get("valueString").getAsString(), targetObject.stringValue);
+    }
 
     @Test
     public void givenJasonWithArray_whenGsonDeserializes_thenMapsToArrayList() {
