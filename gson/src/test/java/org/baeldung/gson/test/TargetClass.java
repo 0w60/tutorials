@@ -1,4 +1,4 @@
-package org.baeldung.gson.deserialization;
+package org.baeldung.gson.test;
 
 /**
  * @author artem

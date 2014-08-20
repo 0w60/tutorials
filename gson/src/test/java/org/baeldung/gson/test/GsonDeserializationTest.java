@@ -1,4 +1,4 @@
-package org.baeldung.gson.deserialization;
+package org.baeldung.gson.test;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
 /**
  * @author artem
  */
-public class MainTest {
+public class GsonDeserializationTest {
 
     @Test
     public void givenJasonWithArray_whenGsonDeserializes_thenMapsToArrayList() {
@@ -91,11 +91,13 @@ public class MainTest {
 
     @Test
     public void givenUsingGson_whenDeserializingCollection_thenCorrect() {
-        final String serializedSourceCollection = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
+        final String serializedSourceCollection =
+                "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
         Type targetClassType = new TypeToken<ArrayList<TargetClass>>() {
         }.getType();
 
-        Collection<TargetClass> targetCollection = new Gson().fromJson(serializedSourceCollection, targetClassType);
+        Collection<TargetClass> targetCollection = new Gson().fromJson(
+                serializedSourceCollection, targetClassType);
         assertThat(targetCollection, instanceOf(ArrayList.class));
     }
 }
