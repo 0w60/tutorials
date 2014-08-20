@@ -86,7 +86,17 @@ public class GsonDeserializationTest {
         GenericTargetClass<Integer> targetObject = new Gson().fromJson(
                 serializedSourceObject, genericTargetClassType);
 
-//        assertThat(targetObject, instanceOf(GenericTargetClass.class));
+        //test
+        ArrayList<GenericTargetClass<Integer>> testList = new ArrayList<>();
+        testList.add(targetObject);
+        Type testListClassType = new TypeToken<ArrayList<GenericTargetClass<Integer>>>() {
+        }.getType();
+        Gson gson = new Gson();
+        String jsonTestList = gson.toJson(testList, testListClassType);
+
+        ArrayList<GenericTargetClass<Integer>> targetList = gson.fromJson(jsonTestList, testListClassType);
+
+        assertThat(targetList.get(0), instanceOf(GenericTargetClass.class));
     }
 
     @Test
