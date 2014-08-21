@@ -1,8 +1,5 @@
 package org.baeldung.gson.test;
 
-/**
- * @author artem
- */
 class GenericTargetClass<Integer> {
 
     private int intField;
