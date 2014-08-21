@@ -7,23 +7,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-
 import org.hamcrest.Matchers;
 import org.junit.Test;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-/**
- * @author artem
- */
+
 public class GsonDeserializationTest {
 
     @Test

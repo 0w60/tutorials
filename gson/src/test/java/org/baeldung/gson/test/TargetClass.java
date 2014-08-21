@@ -1,8 +1,6 @@
 package org.baeldung.gson.test;
 
-/**
- * @author artem
- */
+
 class TargetClass {
     int intValue;
     String stringValue;

@@ -5,12 +5,9 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-
 import java.lang.reflect.Type;
 
-/**
- * Created by artem on 8/20/14.
- */
+
 public class TargetClassDeserializer implements JsonDeserializer<TargetClass> {
 
     @Override
