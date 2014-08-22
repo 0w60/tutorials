@@ -15,7 +15,9 @@ import org.junit.Test;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -40,19 +42,19 @@ public class GsonDeserializationTest {
         assertEquals(jObject.get("valueString").getAsString(), targetObject.stringValue);
     }
 
-    private class SourceClassDeserializer implements JsonDeserializer<SourceClass> {
+    private class SourceClassDeserializer implements JsonDeserializer<SourceClass[]> {
 
         @Override
-        public SourceClass deserialize(JsonElement jElement, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Gson gson = new Gson();
-            ArrayList<typeOfT> list = new ArrayList<>();
-            JsonArray jArray = jElement.getAsJsonArray();
-        for (JsonElement jsonElement : jArray) {
-            list.add(gson.fromJson(jsonElement, SourceClass.class));
-        }
-
-
-            return null;
+        public SourceClass[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonArray jArray = json.getAsJsonArray();
+            SourceClass[] scArray = new SourceClass[jArray.size()];
+            int index = 0;
+            for (JsonElement jElement : jArray) {
+                int i = jElement.getAsJsonObject().get("intValue").getAsInt();
+                String s = jElement.getAsJsonObject().get("stringValue").getAsString();
+                scArray[index++] = new SourceClass(i, s);
+            }
+            return scArray;
         }
     }
 
@@ -62,8 +64,13 @@ public class GsonDeserializationTest {
         final SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
         final String jsonSourceObject =
                 "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
-        ArrayList<SourceClass> targetList = new ArrayList<>();
-        Gson gson = new Gson();
+        List<SourceClass> targetList = new ArrayList<>();
+        GsonBuilder gsonBldr = new GsonBuilder();
+        gsonBldr.registerTypeHierarchyAdapter(SourceClass[].class, new SourceClassDeserializer());
+        Gson gson = gsonBldr.create();
+
+        targetList = Arrays.asList(gson.fromJson(jsonSourceObject, SourceClass[].class));
+
         /*
         Type sourceArrayType = new TypeToken<SourceClass[]>() {
         }.getType();
