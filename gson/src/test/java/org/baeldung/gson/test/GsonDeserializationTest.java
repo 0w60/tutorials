@@ -71,12 +71,6 @@ public class GsonDeserializationTest {
 
         targetList = Arrays.asList(gson.fromJson(jsonSourceObject, SourceClass[].class));
 
-        /*
-        Type sourceArrayType = new TypeToken<SourceClass[]>() {
-        }.getType();
-        String jsonSourceArray = gson.toJson(sourceArray, sourceArrayType);
-        */
-//        JsonElement jElement = new JsonParser().parse(jsonSourceObject);
         assertEquals(sourceArray[0], targetList.get(0));
     }
 
