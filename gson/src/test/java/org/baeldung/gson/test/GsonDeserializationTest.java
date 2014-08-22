@@ -3,18 +3,21 @@ package org.baeldung.gson.test;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import org.hamcrest.Matchers;
+
 import org.junit.Test;
-import java.lang.reflect.Field;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -22,7 +25,7 @@ import static org.junit.Assert.assertThat;
 public class GsonDeserializationTest {
 
     @Test
-    public void givenJasonHasDissimilarFieldNamesButGsonMapsRight_whenUsingCustomDeserializer_thenCorrect() {
+    public void givenJsonHasDissimilarFieldNamesButGsonMapsRight_whenUsingCustomDeserializer_thenCorrect() {
         final String jsonSourceObject = "{\"valueInt\":7,\"valueString\":\"seven\"}";
         GsonBuilder gsonBldr = new GsonBuilder();
         gsonBldr.registerTypeAdapter(TargetClass.class, new TargetClassDeserializer());
@@ -37,27 +40,42 @@ public class GsonDeserializationTest {
         assertEquals(jObject.get("valueString").getAsString(), targetObject.stringValue);
     }
 
-    @Test
-    public void givenJasonWithArray_whenGsonDeserializes_thenMapsToArrayList() {
-        final String jsonSourceObject = "{\"array\":[1,2,3]}";
-        ArrayList<Integer> list = new ArrayList<>();
-        JsonElement jElement = new JsonParser().parse(jsonSourceObject);
-        JsonObject jObject = jElement.getAsJsonObject();
-        JsonArray jArray = jObject.get("array").getAsJsonArray();
+    private class SourceClassDeserializer implements JsonDeserializer<SourceClass> {
+
+        @Override
+        public SourceClass deserialize(JsonElement jElement, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            Gson gson = new Gson();
+            ArrayList<typeOfT> list = new ArrayList<>();
+            JsonArray jArray = jElement.getAsJsonArray();
         for (JsonElement jsonElement : jArray) {
-            int i = jsonElement.getAsInt();
-            list.add(i);
+            list.add(gson.fromJson(jsonElement, SourceClass.class));
         }
 
-        Integer[] testArray = new Integer[jArray.size()];
-        for (int i = 0; i < jArray.size(); i++) {
-            testArray[i] = jArray.get(i).getAsInt();
+
+            return null;
         }
-        assertArrayEquals(testArray, list.toArray());
     }
 
     @Test
-    public void givenJasonHasDissimilarFieldNamesButGsonMapsRight_whenDeserializing_thenCorrect() {
+    public void givenJasonWithArray_whenGsonDeserializes_thenMapsToArrayList() {
+        //It is necessary to override the equals() method in SourceClass
+        final SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
+        final String jsonSourceObject =
+                "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
+        ArrayList<SourceClass> targetList = new ArrayList<>();
+        Gson gson = new Gson();
+        /*
+        Type sourceArrayType = new TypeToken<SourceClass[]>() {
+        }.getType();
+        String jsonSourceArray = gson.toJson(sourceArray, sourceArrayType);
+        */
+//        JsonElement jElement = new JsonParser().parse(jsonSourceObject);
+        assertEquals(sourceArray[0], targetList.get(0));
+    }
+
+    @Test
+    public void givenJasonHasDissimilarFieldNamesButGsonMapsRight_whenDeserializing_thenCorrect
+            () {
         final String jsonSourceObject = "{\"valueInt\":7,\"valueString\":\"seven\"}";
         JsonParser jParser = new JsonParser();
         JsonElement jElement = jParser.parse(jsonSourceObject);
@@ -71,20 +89,13 @@ public class GsonDeserializationTest {
         assertEquals(jObject.get("valueString").getAsString(), targetObject.stringValue);
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void givenJsonHasExtraValuesButGsonIsIgnoringExtras_whenDeserializing_thenCorrect() {
         final String serializedSourceObject = "{\"intValue\":1,\"stringValue\":\"one\",\"extraString\":\"two\",\"extraFloat\":2.2}";
         TargetClass targetObject = new Gson().fromJson(serializedSourceObject, TargetClass.class);
-        Field[] targetObjectFields = targetObject.getClass().getDeclaredFields();
-        try {
-            for (Field f : targetObjectFields) {
-                assertThat(f.toString(), Matchers.containsString("extraString"));
-            }
-        } catch (AssertionError e) {
-            for (Field f : targetObjectFields) {
-                assertThat(f.toString(), Matchers.containsString("extraFloat"));
-            }
-        }
+
+        assertEquals(targetObject.intValue, 1);
+        assertEquals(targetObject.stringValue, "one");
     }
 
     @Test
@@ -96,17 +107,7 @@ public class GsonDeserializationTest {
         GenericTargetClass<Integer> targetObject = new Gson().fromJson(
                 serializedSourceObject, genericTargetClassType);
 
-        //test
-        ArrayList<GenericTargetClass<Integer>> testList = new ArrayList<>();
-        testList.add(targetObject);
-        Type testListClassType = new TypeToken<ArrayList<GenericTargetClass<Integer>>>() {
-        }.getType();
-        Gson gson = new Gson();
-        String jsonTestList = gson.toJson(testList, testListClassType);
-
-        ArrayList<GenericTargetClass<Integer>> targetList = gson.fromJson(jsonTestList, testListClassType);
-
-        assertThat(targetList.get(0), instanceOf(GenericTargetClass.class));
+        assertEquals(targetObject.intField, 1);
     }
 
     @Test
