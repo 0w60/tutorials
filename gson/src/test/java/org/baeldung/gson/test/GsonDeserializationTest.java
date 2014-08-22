@@ -35,9 +35,7 @@ public class GsonDeserializationTest {
         TargetClass targetObject = gson.fromJson(jsonSourceObject, TargetClass.class);
 
         //test
-        JsonElement jElement = new JsonParser().parse(jsonSourceObject);
-        JsonObject jObject = jElement.getAsJsonObject();
-
+        JsonObject jObject = new JsonParser().parse(jsonSourceObject).getAsJsonObject();
         assertEquals(jObject.get("valueInt").getAsInt(), targetObject.intValue);
         assertEquals(jObject.get("valueString").getAsString(), targetObject.stringValue);
     }
@@ -75,7 +73,7 @@ public class GsonDeserializationTest {
     }
 
     @Test
-    public void givenJasonHasDissimilarFieldNamesButGsonMapsRight_whenDeserializing_thenCorrect
+    public void givenJasonHasDissimilarFieldNamesButGsonMapsRight_whenDeserializingManualy_thenCorrect
             () {
         final String jsonSourceObject = "{\"valueInt\":7,\"valueString\":\"seven\"}";
         JsonParser jParser = new JsonParser();
