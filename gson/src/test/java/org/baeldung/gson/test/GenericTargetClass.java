@@ -2,9 +2,9 @@ package org.baeldung.gson.test;
 
 class GenericTargetClass<Integer> {
 
-    protected int intField;
+    protected Integer intField;
 
-    GenericTargetClass(int i) {
+    GenericTargetClass(Integer i) {
         intField = i;
     }
 

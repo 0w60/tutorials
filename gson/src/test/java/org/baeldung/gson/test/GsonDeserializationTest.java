@@ -2,12 +2,8 @@ package org.baeldung.gson.test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
@@ -38,22 +34,6 @@ public class GsonDeserializationTest {
         JsonObject jObject = new JsonParser().parse(jsonSourceObject).getAsJsonObject();
         assertEquals(jObject.get("valueInt").getAsInt(), targetObject.intValue);
         assertEquals(jObject.get("valueString").getAsString(), targetObject.stringValue);
-    }
-
-    private class SourceClassDeserializer implements JsonDeserializer<SourceClass[]> {
-
-        @Override
-        public SourceClass[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            JsonArray jArray = json.getAsJsonArray();
-            SourceClass[] scArray = new SourceClass[jArray.size()];
-            int index = 0;
-            for (JsonElement jElement : jArray) {
-                int i = jElement.getAsJsonObject().get("intValue").getAsInt();
-                String s = jElement.getAsJsonObject().get("stringValue").getAsString();
-                scArray[index++] = new SourceClass(i, s);
-            }
-            return scArray;
-        }
     }
 
     @Test
@@ -106,7 +86,7 @@ public class GsonDeserializationTest {
         GenericTargetClass<Integer> targetObject = new Gson().fromJson(
                 serializedSourceObject, genericTargetClassType);
 
-        assertEquals(targetObject.intField, 1);
+        assertEquals(targetObject.intField, new Integer(1));
     }
 
     @Test
