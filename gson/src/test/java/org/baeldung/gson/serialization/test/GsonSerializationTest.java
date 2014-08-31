@@ -67,5 +67,19 @@ public class GsonSerializationTest {
         assertEquals(sourceObject.stringValue, otherStringValue);
     }
 
+    @Test
+    public void givenUsingGsonCustomSerializer_whenObjectHasExtraFields_thenSerializingWithoutExtras() {
+        GsonBuilder gsonBuildr = new GsonBuilder();
+        gsonBuildr.registerTypeAdapter(SourceClass.class, new SourceClassIgnoringExtraFieldsSerializer());
+        Gson gson = gsonBuildr.create();
+        SourceClass sourceObject = new SourceClass(7, "seven");
+        String jsonString = gson.toJson(sourceObject);
 
+        //test
+        JsonElement jElement = new JsonParser().parse(jsonString);
+        JsonObject jObject = jElement.getAsJsonObject();
+        int intValue = jObject.get("intValue").getAsInt();
+
+        assertEquals(sourceObject.intValue, intValue);
+    }
 }
