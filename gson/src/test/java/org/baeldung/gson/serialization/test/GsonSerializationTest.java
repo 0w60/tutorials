@@ -3,22 +3,15 @@ package org.baeldung.gson.serialization.test;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.baeldung.gson.deserialization.test.SourceClass;
 import org.junit.Test;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class GsonSerializationTest {
 
@@ -38,14 +31,19 @@ public class GsonSerializationTest {
     @Test
     public void givenUsingGson_whenSerializingArrayOfObjects_thenMapToJsonCollection() {
         SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
-        List<SourceClass> list = new ArrayList<>(Arrays.asList(sourceArray));
-        Type targetCollectionType = new TypeToken<Collection<SourceClass>>() {
-        }.getType();
-        String jsonCollection = new Gson().toJson(list, targetCollectionType);
+        String jsonCollection = new Gson().toJson(sourceArray);
 
         //test
+        String estimatedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
+        assertEquals(estimatedResult, jsonCollection);
+/*
+        Type targetCollectionType = new TypeToken<Collection<SourceClass>>() {
+        }.getType();
         Collection<SourceClass> targetCollection = new Gson().fromJson(jsonCollection, targetCollectionType);
         assertTrue(targetCollection.containsAll(Arrays.asList(sourceArray)));
+*/
+
+
     }
 
     @Test
@@ -57,6 +55,9 @@ public class GsonSerializationTest {
         String jsonString = gson.toJson(sourceObject);
 
         //test
+        String estimatedResult = "{\"otherIntValue\":7,\"otherStringValue\":\"seven\"}";
+        assertEquals(estimatedResult, jsonString);
+/*
         JsonElement jElement = new JsonParser().parse(jsonString);
         JsonObject jObject = jElement.getAsJsonObject();
         int otherIntValue = jObject.get("otherIntValue").getAsInt();
@@ -64,6 +65,7 @@ public class GsonSerializationTest {
 
         assertEquals(sourceObject.intValue, otherIntValue);
         assertEquals(sourceObject.stringValue, otherStringValue);
+ */
     }
 
     @Test
@@ -75,10 +77,14 @@ public class GsonSerializationTest {
         String jsonString = gson.toJson(sourceObject);
 
         //test
+        String estimatedResult = "{\"intValue\":7}";
+        assertEquals(estimatedResult, jsonString);
+/*
         JsonElement jElement = new JsonParser().parse(jsonString);
         JsonObject jObject = jElement.getAsJsonObject();
         int intValue = jObject.get("intValue").getAsInt();
 
         assertEquals(sourceObject.intValue, intValue);
+*/
     }
 }
