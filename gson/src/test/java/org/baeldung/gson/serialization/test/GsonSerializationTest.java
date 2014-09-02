@@ -1,5 +1,6 @@
 package org.baeldung.gson.serialization.test;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -14,7 +15,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -23,8 +24,8 @@ public class GsonSerializationTest {
 
     @Test
     public void givenUsingGson_whenSerializingCollection_thenCorrect() {
-        Collection<SourceClass> sourceCollection = new ArrayList<SourceClass>();
-        Collections.addAll(sourceCollection, new SourceClass(1, "one"), new SourceClass(2, "two"));
+        Collection<SourceClass> sourceCollection = Lists.newArrayList(
+                new SourceClass(1, "one"), new SourceClass(2, "two"));
         Type sourceCollectionType = new TypeToken<Collection<SourceClass>>() {
         }.getType();
         String jsonCollection = new Gson().toJson(sourceCollection, sourceCollectionType);
@@ -37,23 +38,22 @@ public class GsonSerializationTest {
     @Test
     public void givenUsingGson_whenSerializingArrayOfObjects_thenMapToJsonCollection() {
         SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
-        ArrayList<SourceClass> list = new ArrayList<>(Arrays.asList(sourceArray));
-        Collection<SourceClass> targetCollection;
+        List<SourceClass> list = new ArrayList<>(Arrays.asList(sourceArray));
         Type targetCollectionType = new TypeToken<Collection<SourceClass>>() {
         }.getType();
         String jsonCollection = new Gson().toJson(list, targetCollectionType);
 
         //test
-        targetCollection = new Gson().fromJson(jsonCollection, targetCollectionType);
+        Collection<SourceClass> targetCollection = new Gson().fromJson(jsonCollection, targetCollectionType);
         assertTrue(targetCollection.containsAll(Arrays.asList(sourceArray)));
     }
 
     @Test
     public void givenUsingGsonCustomSerializer_whenSerializingObjectToJsonWithDissimilarFieldNames_thenCorrect() {
+        SourceClass sourceObject = new SourceClass(7, "seven");
         GsonBuilder gsonBuildr = new GsonBuilder();
         gsonBuildr.registerTypeAdapter(SourceClass.class, new SourceClassChangingFieldNamesSerializer());
         Gson gson = gsonBuildr.create();
-        SourceClass sourceObject = new SourceClass(7, "seven");
         String jsonString = gson.toJson(sourceObject);
 
         //test
@@ -68,10 +68,10 @@ public class GsonSerializationTest {
 
     @Test
     public void givenUsingGsonCustomSerializer_whenObjectHasExtraFields_thenSerializingWithoutExtras() {
+        SourceClass sourceObject = new SourceClass(7, "seven");
         GsonBuilder gsonBuildr = new GsonBuilder();
         gsonBuildr.registerTypeAdapter(SourceClass.class, new SourceClassIgnoringExtraFieldsSerializer());
         Gson gson = gsonBuildr.create();
-        SourceClass sourceObject = new SourceClass(7, "seven");
         String jsonString = gson.toJson(sourceObject);
 
         //test
