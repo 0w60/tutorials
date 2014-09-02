@@ -23,8 +23,7 @@ public class GsonSerializationTest {
 
     @Test
     public void givenUsingGson_whenSerializingCollection_thenCorrect() {
-        ArrayList<SourceClass> list = new ArrayList<>();
-        Collection<SourceClass> sourceCollection = list;
+        Collection<SourceClass> sourceCollection = new ArrayList<SourceClass>();
         Collections.addAll(sourceCollection, new SourceClass(1, "one"), new SourceClass(2, "two"));
         Type sourceCollectionType = new TypeToken<Collection<SourceClass>>() {
         }.getType();
