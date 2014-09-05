@@ -5,8 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import org.baeldung.gson.deserialization.test.SourceClass;
-
 import java.lang.reflect.Type;
 
 public class SourceClassChangingFieldNamesSerializer implements JsonSerializer<SourceClass> {

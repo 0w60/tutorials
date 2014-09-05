@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import org.baeldung.gson.deserialization.test.SourceClass;
 import org.junit.Test;
 
 import java.lang.reflect.Type;
