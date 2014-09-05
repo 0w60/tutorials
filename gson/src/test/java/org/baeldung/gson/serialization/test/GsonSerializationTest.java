@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class GsonSerializationTest {
 
     @Test
-    public void givenUsingGson_whenSerializingCollection_thenCorrect() {
+    public void givenCollection_whenSerializing_thenCorrect() {
         Collection<SourceClass> sourceCollection = Lists.newArrayList(
                 new SourceClass(1, "one"), new SourceClass(2, "two"));
         Type sourceCollectionType = new TypeToken<Collection<SourceClass>>() {
@@ -29,25 +29,17 @@ public class GsonSerializationTest {
     }
 
     @Test
-    public void givenUsingGson_whenSerializingArrayOfObjects_thenMapToJsonCollection() {
+    public void givenArrayOfObjects_whenSerializing_thenMapToJsonCollection() {
         SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
         String jsonCollection = new Gson().toJson(sourceArray);
 
         //test
         String estimatedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
         assertEquals(estimatedResult, jsonCollection);
-/*
-        Type targetCollectionType = new TypeToken<Collection<SourceClass>>() {
-        }.getType();
-        Collection<SourceClass> targetCollection = new Gson().fromJson(jsonCollection, targetCollectionType);
-        assertTrue(targetCollection.containsAll(Arrays.asList(sourceArray)));
-*/
-
-
     }
 
     @Test
-    public void givenUsingGsonCustomSerializer_whenSerializingObjectToJsonWithDissimilarFieldNames_thenCorrect() {
+    public void givenUsingCustomSerializer_whenSerializingObjectToJsonWithDissimilarFieldNames_thenCorrect() {
         SourceClass sourceObject = new SourceClass(7, "seven");
         GsonBuilder gsonBuildr = new GsonBuilder();
         gsonBuildr.registerTypeAdapter(SourceClass.class, new SourceClassChangingFieldNamesSerializer());
@@ -57,19 +49,10 @@ public class GsonSerializationTest {
         //test
         String estimatedResult = "{\"otherIntValue\":7,\"otherStringValue\":\"seven\"}";
         assertEquals(estimatedResult, jsonString);
-/*
-        JsonElement jElement = new JsonParser().parse(jsonString);
-        JsonObject jObject = jElement.getAsJsonObject();
-        int otherIntValue = jObject.get("otherIntValue").getAsInt();
-        String otherStringValue = jObject.get("otherStringValue").getAsString();
-
-        assertEquals(sourceObject.intValue, otherIntValue);
-        assertEquals(sourceObject.stringValue, otherStringValue);
- */
     }
 
     @Test
-    public void givenUsingGsonCustomSerializer_whenObjectHasExtraFields_thenSerializingWithoutExtras() {
+    public void givenUsingCustomSerializer_whenSerializingObject_thenFieldIgnored() {
         SourceClass sourceObject = new SourceClass(7, "seven");
         GsonBuilder gsonBuildr = new GsonBuilder();
         gsonBuildr.registerTypeAdapter(SourceClass.class, new SourceClassIgnoringExtraFieldsSerializer());
@@ -79,12 +62,5 @@ public class GsonSerializationTest {
         //test
         String estimatedResult = "{\"intValue\":7}";
         assertEquals(estimatedResult, jsonString);
-/*
-        JsonElement jElement = new JsonParser().parse(jsonString);
-        JsonObject jObject = jElement.getAsJsonObject();
-        int intValue = jObject.get("intValue").getAsInt();
-
-        assertEquals(sourceObject.intValue, intValue);
-*/
     }
 }
