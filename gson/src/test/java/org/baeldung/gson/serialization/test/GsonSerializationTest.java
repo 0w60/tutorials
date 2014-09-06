@@ -9,8 +9,10 @@ import org.junit.Test;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GsonSerializationTest {
 
@@ -61,5 +63,18 @@ public class GsonSerializationTest {
         //test
         String estimatedResult = "{\"intValue\":7}";
         assertEquals(estimatedResult, jsonString);
+    }
+
+    @Test
+    public void givenDate_whenSerializing_thenCorrect() {
+        Date sourceDate = new Date(1000000L);
+        Gson gson = new Gson();
+        Type sourceDateType = new TypeToken<Date>() {
+        }.getType();
+        String jsonDate = gson.toJson(sourceDate, sourceDateType);
+
+        //test
+        Date testDate = gson.fromJson(jsonDate, sourceDateType);
+        assertTrue(sourceDate.equals(testDate));
     }
 }
