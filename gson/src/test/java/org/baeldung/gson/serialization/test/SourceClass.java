@@ -37,4 +37,11 @@ public class SourceClass {
 
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        int result = intValue;
+        result = 31 * result + stringValue.hashCode();
+        return result;
+    }
 }
