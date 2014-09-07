@@ -30,13 +30,13 @@ public class GsonSerializationTest {
     }
 
     @Test
-    public void givenArrayOfObjects_whenSerializing_thenMapToJsonCollection() {
+    public void givenArrayOfObjects_whenSerializing_thenCorrect() {
         SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
-        String jsonCollection = new Gson().toJson(sourceArray);
+        String jsonString = new Gson().toJson(sourceArray);
 
         //test
         String estimatedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
-        assertEquals(estimatedResult, jsonCollection);
+        assertEquals(estimatedResult, jsonString);
     }
 
     @Test
