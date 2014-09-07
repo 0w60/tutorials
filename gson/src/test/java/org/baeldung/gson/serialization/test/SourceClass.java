@@ -1,12 +1,20 @@
 package org.baeldung.gson.serialization.test;
 
 public class SourceClass {
-    public int intValue;
-    public String stringValue;
+    private int intValue;
+    private String stringValue;
 
     public SourceClass(int intValue, String stringValue) {
         this.intValue = intValue;
         this.stringValue = stringValue;
+    }
+
+    public int getIntValue() {
+        return intValue;
+    }
+
+    public String getStringValue() {
+        return stringValue;
     }
 
     @Override

@@ -12,7 +12,7 @@ public class SourceClassIgnoringExtraFieldsSerializer implements JsonSerializer<
     public JsonElement serialize(SourceClass src, Type typeOfSrc, JsonSerializationContext context) {
         String intValue = "intValue";
         JsonObject jObject = new JsonObject();
-        jObject.addProperty(intValue, src.intValue);
+        jObject.addProperty(intValue, src.getIntValue());
 
         return jObject;
     }

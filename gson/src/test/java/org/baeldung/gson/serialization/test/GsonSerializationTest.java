@@ -25,8 +25,8 @@ public class GsonSerializationTest {
         String jsonCollection = new Gson().toJson(sourceCollection, sourceCollectionType);
 
         //test
-        Collection<SourceClass> testCollection = new Gson().fromJson(jsonCollection, sourceCollectionType);
-        assertEquals(sourceCollection, testCollection);
+        String estimatedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
+        assertEquals(estimatedResult, jsonCollection);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class GsonSerializationTest {
         String jsonDate = gson.toJson(sourceDate, sourceDateType);
 
         //test
-        Date testDate = gson.fromJson(jsonDate, sourceDateType);
-        assertTrue(sourceDate.equals(testDate));
+        String estimatedResult = "\"Jan 1, 1970 3:16:40 AM\"";
+        assertTrue(jsonDate.equals(estimatedResult));
     }
 }
