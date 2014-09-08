@@ -74,7 +74,23 @@ public class GsonSerializationTest {
         String jsonDate = gson.toJson(sourceDate, sourceDateType);
 
         //test
+        System.out.println("jsonDate:\n" + jsonDate);
         String estimatedResult = "\"Jan 1, 1970 3:16:40 AM\"";
         assertTrue(jsonDate.equals(estimatedResult));
+    }
+
+    @Test
+    public void givenUsingCustomDeserializer_whenFieldNotMatchesCriteria_thenIgnoringIt() {
+        SourceClass sourceObject = new SourceClass(-1, "minus 1");
+        GsonBuilder gsonBuildr = new GsonBuilder();
+        gsonBuildr.registerTypeAdapter(SourceClass.class, new IgnoringFieldsNotMatchingCriteriaSerializer());
+        Gson gson = gsonBuildr.create();
+        Type sourceObjectType = new TypeToken<SourceClass>() {
+        }.getType();
+        String jsonString = gson.toJson(sourceObject, sourceObjectType);
+
+        //test
+        String estimatedResult = "{\"stringValue\":\"minus 1\"}";
+        assertEquals(estimatedResult, jsonString);
     }
 }
