@@ -1,6 +1,5 @@
 package org.baeldung.gson.serialization;
 
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;

@@ -4,10 +4,13 @@ public class SourceClass {
     private int intValue;
     private String stringValue;
 
+
     public SourceClass(int intValue, String stringValue) {
         this.intValue = intValue;
         this.stringValue = stringValue;
     }
+
+    // API
 
     public int getIntValue() {
         return intValue;
@@ -15,14 +18,6 @@ public class SourceClass {
 
     public String getStringValue() {
         return stringValue;
-    }
-
-    @Override
-    public String toString() {
-        return "Foo{" +
-                "intValue=" + intValue +
-                ", stringValue='" + stringValue + '\'' +
-                '}';
     }
 
     @Override
@@ -34,8 +29,12 @@ public class SourceClass {
 
         if (intValue != that.intValue) return false;
         if (!stringValue.equals(that.stringValue)) return false;
-
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "SourceClass{" + "intValue=" + intValue + ", stringValue='" + stringValue + '\'' + '}';
     }
 
     @Override

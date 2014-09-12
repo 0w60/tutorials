@@ -1,15 +1,15 @@
 package org.baeldung.gson.deserialization;
 
-public class GenericFoo<Integer> {
+public class GenericFoo<T> {
 
-    public Integer intField;
+    public T theValue;
 
-    public GenericFoo(Integer i) {
-        intField = i;
+    public GenericFoo(final T value) {
+        theValue = value;
     }
 
     @Override
-    public String toString() {
-        return "GenericFoo{" + "intField=" + intField + '}';
+    public final String toString() {
+        return "GenericFoo{" + "theValue=" + theValue + '}';
     }
 }

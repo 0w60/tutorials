@@ -5,10 +5,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.baeldung.gson.serialization.DifferentNameSerializer;
 import org.baeldung.gson.serialization.IgnoringFieldsNotMatchingCriteriaSerializer;
+import org.baeldung.gson.serialization.IgnoringFieldsSerializer;
 import org.baeldung.gson.serialization.SourceClass;
-import org.baeldung.gson.serialization.SourceClassChangingFieldNamesSerializer;
-import org.baeldung.gson.serialization.SourceClassIgnoringExtraFieldsSerializer;
 import org.junit.Test;
 
 import java.lang.reflect.Type;
@@ -18,56 +18,62 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 
 public class GsonSerializationTest {
 
     @Test
     public void givenCollection_whenSerializing_thenCorrect() {
-        Collection<SourceClass> sourceCollection = Lists.newArrayList(
-                new SourceClass(1, "one"), new SourceClass(2, "two"));
-        Type sourceCollectionType = new TypeToken<Collection<SourceClass>>() {
-        }.getType();
-        String jsonCollection = new Gson().toJson(sourceCollection, sourceCollectionType);
+        final Collection<SourceClass> sourceCollection = Lists.newArrayList(new SourceClass(1, "one"), new SourceClass(2, "two"));
+        final String jsonCollection = new Gson().toJson(sourceCollection);
 
-        //test
-        String expectedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
+        final String expectedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
         assertEquals(expectedResult, jsonCollection);
     }
 
+
     @Test
     public void givenArrayOfObjects_whenSerializing_thenCorrect() {
-        SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
-        String jsonString = new Gson().toJson(sourceArray);
+        final SourceClass[] sourceArray = {new SourceClass(1, "one"), new SourceClass(2, "two")};
+        final String jsonString = new Gson().toJson(sourceArray);
 
-        //test
-        String expectedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
+        final String expectedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
         assertEquals(expectedResult, jsonString);
     }
 
     @Test
-    public void givenUsingCustomSerializer_whenSerializingObjectToJsonWithDissimilarFieldNames_thenCorrect() {
-        SourceClass sourceObject = new SourceClass(7, "seven");
-        GsonBuilder gsonBuildr = new GsonBuilder();
-        gsonBuildr.registerTypeAdapter(SourceClass.class, new SourceClassChangingFieldNamesSerializer());
-        Gson gson = gsonBuildr.create();
-        String jsonString = gson.toJson(sourceObject);
+    public void givenUsingCustomSerializer_whenChangingNameOfFieldOnSerializing_thenCorrect() {
+        final SourceClass sourceObject = new SourceClass(7, "seven");
+        final GsonBuilder gsonBuildr = new GsonBuilder();
+        gsonBuildr.registerTypeAdapter(SourceClass.class, new DifferentNameSerializer());
+        final String jsonString = gsonBuildr.create().toJson(sourceObject);
 
-        //test
-        String expectedResult = "{\"otherIntValue\":7,\"otherStringValue\":\"seven\"}";
+        final String expectedResult = "{\"otherIntValue\":7,\"otherStringValue\":\"seven\"}";
         assertEquals(expectedResult, jsonString);
     }
 
     @Test
-    public void givenUsingCustomSerializer_whenSerializingObject_thenFieldIgnored() {
-        SourceClass sourceObject = new SourceClass(7, "seven");
-        GsonBuilder gsonBuildr = new GsonBuilder();
-        gsonBuildr.registerTypeAdapter(SourceClass.class, new SourceClassIgnoringExtraFieldsSerializer());
-        Gson gson = gsonBuildr.create();
-        String jsonString = gson.toJson(sourceObject);
+    public void givenIgnoringAField_whenSerializingWithCustomSerializer_thenFieldIgnored() {
+        final SourceClass sourceObject = new SourceClass(7, "seven");
+        final GsonBuilder gsonBuildr = new GsonBuilder();
+        gsonBuildr.registerTypeAdapter(SourceClass.class, new IgnoringFieldsSerializer());
+        final String jsonString = gsonBuildr.create().toJson(sourceObject);
 
-        //test
-        String expectedResult = "{\"intValue\":7}";
+        final String expectedResult = "{\"intValue\":7}";
+        assertEquals(expectedResult, jsonString);
+    }
+
+    @Test
+    public void givenUsingCustomDeserializer_whenFieldNotMatchesCriteria_thenIgnored() {
+        final SourceClass sourceObject = new SourceClass(-1, "minus 1");
+        final GsonBuilder gsonBuildr = new GsonBuilder();
+        gsonBuildr.registerTypeAdapter(SourceClass.class, new IgnoringFieldsNotMatchingCriteriaSerializer());
+        final Gson gson = gsonBuildr.create();
+        final Type sourceObjectType = new TypeToken<SourceClass>() {
+        }.getType();
+        final String jsonString = gson.toJson(sourceObject, sourceObjectType);
+
+        final String expectedResult = "{\"stringValue\":\"minus 1\"}";
         assertEquals(expectedResult, jsonString);
     }
 
@@ -85,21 +91,5 @@ public class GsonSerializationTest {
         System.out.println("jsonDate:\n" + jsonDate);
         String expectedResult = "\"Jan 1, 2000 12:00:00 AM\"";
         assertEquals(expectedResult, jsonDate);
-//        assertTrue(jsonDate.equals(expectedResult));
-    }
-
-    @Test
-    public void givenUsingCustomDeserializer_whenFieldNotMatchesCriteria_thenIgnoringIt() {
-        SourceClass sourceObject = new SourceClass(-1, "minus 1");
-        GsonBuilder gsonBuildr = new GsonBuilder();
-        gsonBuildr.registerTypeAdapter(SourceClass.class, new IgnoringFieldsNotMatchingCriteriaSerializer());
-        Gson gson = gsonBuildr.create();
-        Type sourceObjectType = new TypeToken<SourceClass>() {
-        }.getType();
-        String jsonString = gson.toJson(sourceObject, sourceObjectType);
-
-        //test
-        String expectedResult = "{\"stringValue\":\"minus 1\"}";
-        assertEquals(expectedResult, jsonString);
     }
 }
