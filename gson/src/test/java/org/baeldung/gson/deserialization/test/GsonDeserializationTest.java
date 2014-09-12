@@ -1,8 +1,17 @@
 package org.baeldung.gson.deserialization.test;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import org.baeldung.gson.deserialization.Foo;
+import org.baeldung.gson.deserialization.FooDeserializer;
+import org.baeldung.gson.deserialization.FooDeserializerFromJsonWithDifferentFields;
+import org.baeldung.gson.deserialization.GenericFoo;
+import org.junit.Test;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -10,14 +19,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 
 public class GsonDeserializationTest {
@@ -26,9 +30,9 @@ public class GsonDeserializationTest {
     public void givenJsonHasDissimilarFieldNamesButGsonMapsRight_whenUsingCustomDeserializer_thenCorrect() {
         final String jsonSourceObject = "{\"valueInt\":7,\"valueString\":\"seven\"}";
         GsonBuilder gsonBldr = new GsonBuilder();
-        gsonBldr.registerTypeAdapter(TargetClass.class, new TargetClassDeserializer());
+        gsonBldr.registerTypeAdapter(Foo.class, new FooDeserializerFromJsonWithDifferentFields());
         Gson gson = gsonBldr.create();
-        TargetClass targetObject = gson.fromJson(jsonSourceObject, TargetClass.class);
+        Foo targetObject = gson.fromJson(jsonSourceObject, Foo.class);
 
         assertEquals(targetObject.intValue, 7);
         assertEquals(targetObject.stringValue, "seven");
@@ -36,16 +40,16 @@ public class GsonDeserializationTest {
 
     @Test
     public void givenJsonWithArray_whenUsingGsonCustomDeserializer_thenMapsToArrayList() {
-        //It is necessary to override the equals() method in SourceClass
+        //It is necessary to override the equals() method in Foo Class
         final String jsonSourceObject =
                 "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
         GsonBuilder gsonBldr = new GsonBuilder();
-        gsonBldr.registerTypeHierarchyAdapter(SourceClass[].class, new SourceClassDeserializer());
+        gsonBldr.registerTypeHierarchyAdapter(Foo[].class, new FooDeserializer());
         Gson gson = gsonBldr.create();
 
-        List<SourceClass> targetList = Arrays.asList(gson.fromJson(jsonSourceObject, SourceClass[].class));
+        List<Foo> targetList = Arrays.asList(gson.fromJson(jsonSourceObject, Foo[].class));
 
-        assertEquals(new SourceClass(1, "one"), targetList.get(0));
+        assertEquals(new Foo(1, "one"), targetList.get(0));
     }
 
     @Test
@@ -58,7 +62,7 @@ public class GsonDeserializationTest {
         int intValue = jObject.get("valueInt").getAsInt();
         String stringValue = jObject.get("valueString").getAsString();
 
-        TargetClass targetObject = new TargetClass(intValue, stringValue);
+        Foo targetObject = new Foo(intValue, stringValue);
 
         assertEquals(targetObject.intValue, 7);
         assertEquals(targetObject.stringValue, "seven");
@@ -67,7 +71,7 @@ public class GsonDeserializationTest {
     @Test
     public void givenJsonHasExtraValuesButGsonIsIgnoringExtras_whenDeserializing_thenCorrect() {
         final String serializedSourceObject = "{\"intValue\":1,\"stringValue\":\"one\",\"extraString\":\"two\",\"extraFloat\":2.2}";
-        TargetClass targetObject = new Gson().fromJson(serializedSourceObject, TargetClass.class);
+        Foo targetObject = new Gson().fromJson(serializedSourceObject, Foo.class);
 
         assertEquals(targetObject.intValue, 1);
         assertEquals(targetObject.stringValue, "one");
@@ -75,11 +79,11 @@ public class GsonDeserializationTest {
 
     @Test
     public void givenUsingGson_whenDeserializingGeneric_thenCorrect() {
-        Type genericTargetClassType = new TypeToken<GenericTargetClass<Integer>>() {
+        Type genericTargetClassType = new TypeToken<GenericFoo<Integer>>() {
         }.getType();
         final String serializedSourceObject = "{\"intField\":1}";
 
-        GenericTargetClass<Integer> targetObject = new Gson().fromJson(
+        GenericFoo<Integer> targetObject = new Gson().fromJson(
                 serializedSourceObject, genericTargetClassType);
 
         assertEquals(targetObject.intField, new Integer(1));
@@ -89,10 +93,10 @@ public class GsonDeserializationTest {
     public void givenUsingGson_whenDeserializingCollection_thenCorrect() {
         final String serializedSourceCollection =
                 "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
-        Type targetClassType = new TypeToken<ArrayList<TargetClass>>() {
+        Type targetClassType = new TypeToken<ArrayList<Foo>>() {
         }.getType();
 
-        Collection<TargetClass> targetCollection = new Gson().fromJson(
+        Collection<Foo> targetCollection = new Gson().fromJson(
                 serializedSourceCollection, targetClassType);
         assertThat(targetCollection, instanceOf(ArrayList.class));
     }

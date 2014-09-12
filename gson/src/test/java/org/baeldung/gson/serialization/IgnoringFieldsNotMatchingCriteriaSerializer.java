@@ -1,4 +1,4 @@
-package org.baeldung.gson.serialization.test;
+package org.baeldung.gson.serialization;
 
 
 import com.google.gson.JsonElement;

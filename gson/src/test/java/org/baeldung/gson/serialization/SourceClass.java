@@ -1,4 +1,4 @@
-package org.baeldung.gson.serialization.test;
+package org.baeldung.gson.serialization;
 
 public class SourceClass {
     private int intValue;
@@ -19,7 +19,7 @@ public class SourceClass {
 
     @Override
     public String toString() {
-        return "SourceClass{" +
+        return "Foo{" +
                 "intValue=" + intValue +
                 ", stringValue='" + stringValue + '\'' +
                 '}';

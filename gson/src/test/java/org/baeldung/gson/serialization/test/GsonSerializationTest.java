@@ -5,6 +5,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.baeldung.gson.serialization.IgnoringFieldsNotMatchingCriteriaSerializer;
+import org.baeldung.gson.serialization.SourceClass;
+import org.baeldung.gson.serialization.SourceClassChangingFieldNamesSerializer;
+import org.baeldung.gson.serialization.SourceClassIgnoringExtraFieldsSerializer;
 import org.junit.Test;
 
 import java.lang.reflect.Type;
@@ -81,6 +85,7 @@ public class GsonSerializationTest {
         System.out.println("jsonDate:\n" + jsonDate);
         String expectedResult = "\"Jan 1, 2000 12:00:00 AM\"";
         assertEquals(expectedResult, jsonDate);
+//        assertTrue(jsonDate.equals(expectedResult));
     }
 
     @Test

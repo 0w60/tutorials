@@ -1,4 +1,4 @@
-package org.baeldung.gson.deserialization.test;
+package org.baeldung.gson.deserialization;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -9,13 +9,13 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 
 
-public class TargetClassDeserializer implements JsonDeserializer<TargetClass> {
+public class FooDeserializerFromJsonWithDifferentFields implements JsonDeserializer<Foo> {
 
     @Override
-    public TargetClass deserialize(JsonElement jElement, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Foo deserialize(JsonElement jElement, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jObject = jElement.getAsJsonObject();
         int intValue = jObject.get("valueInt").getAsInt();
         String stringValue = jObject.get("valueString").getAsString();
-        return new TargetClass(intValue, stringValue);
+        return new Foo(intValue, stringValue);
     }
 }

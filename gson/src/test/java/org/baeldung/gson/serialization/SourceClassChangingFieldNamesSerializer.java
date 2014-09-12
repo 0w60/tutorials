@@ -1,4 +1,4 @@
-package org.baeldung.gson.serialization.test;
+package org.baeldung.gson.serialization;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -7,12 +7,16 @@ import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 
-public class SourceClassIgnoringExtraFieldsSerializer implements JsonSerializer<SourceClass> {
+public class SourceClassChangingFieldNamesSerializer implements JsonSerializer<SourceClass> {
+
     @Override
     public JsonElement serialize(SourceClass src, Type typeOfSrc, JsonSerializationContext context) {
-        String intValue = "intValue";
+        String otherIntValueName = "otherIntValue";
+        String otherStringValueName = "otherStringValue";
+
         JsonObject jObject = new JsonObject();
-        jObject.addProperty(intValue, src.getIntValue());
+        jObject.addProperty(otherIntValueName, src.getIntValue());
+        jObject.addProperty(otherStringValueName, src.getStringValue());
 
         return jObject;
     }
