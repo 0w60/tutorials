@@ -8,8 +8,10 @@ import com.google.gson.reflect.TypeToken;
 import org.junit.Test;
 
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,8 +27,8 @@ public class GsonSerializationTest {
         String jsonCollection = new Gson().toJson(sourceCollection, sourceCollectionType);
 
         //test
-        String estimatedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
-        assertEquals(estimatedResult, jsonCollection);
+        String expectedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
+        assertEquals(expectedResult, jsonCollection);
     }
 
     @Test
@@ -35,8 +37,8 @@ public class GsonSerializationTest {
         String jsonString = new Gson().toJson(sourceArray);
 
         //test
-        String estimatedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
-        assertEquals(estimatedResult, jsonString);
+        String expectedResult = "[{\"intValue\":1,\"stringValue\":\"one\"},{\"intValue\":2,\"stringValue\":\"two\"}]";
+        assertEquals(expectedResult, jsonString);
     }
 
     @Test
@@ -48,8 +50,8 @@ public class GsonSerializationTest {
         String jsonString = gson.toJson(sourceObject);
 
         //test
-        String estimatedResult = "{\"otherIntValue\":7,\"otherStringValue\":\"seven\"}";
-        assertEquals(estimatedResult, jsonString);
+        String expectedResult = "{\"otherIntValue\":7,\"otherStringValue\":\"seven\"}";
+        assertEquals(expectedResult, jsonString);
     }
 
     @Test
@@ -61,13 +63,15 @@ public class GsonSerializationTest {
         String jsonString = gson.toJson(sourceObject);
 
         //test
-        String estimatedResult = "{\"intValue\":7}";
-        assertEquals(estimatedResult, jsonString);
+        String expectedResult = "{\"intValue\":7}";
+        assertEquals(expectedResult, jsonString);
     }
 
     @Test
     public void givenDate_whenSerializing_thenCorrect() {
-        Date sourceDate = new Date(1000000L);
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.set(2000, Calendar.JANUARY, 1, 0, 0, 0);
+        Date sourceDate = calendar.getTime();
         Gson gson = new Gson();
         Type sourceDateType = new TypeToken<Date>() {
         }.getType();
@@ -75,8 +79,8 @@ public class GsonSerializationTest {
 
         //test
         System.out.println("jsonDate:\n" + jsonDate);
-        String estimatedResult = "\"Jan 1, 1970 3:16:40 AM\"";
-        assertTrue(jsonDate.equals(estimatedResult));
+        String expectedResult = "\"Jan 1, 2000 12:00:00 AM\"";
+        assertEquals(expectedResult, jsonDate);
     }
 
     @Test
@@ -90,7 +94,7 @@ public class GsonSerializationTest {
         String jsonString = gson.toJson(sourceObject, sourceObjectType);
 
         //test
-        String estimatedResult = "{\"stringValue\":\"minus 1\"}";
-        assertEquals(estimatedResult, jsonString);
+        String expectedResult = "{\"stringValue\":\"minus 1\"}";
+        assertEquals(expectedResult, jsonString);
     }
 }
