@@ -20,5 +20,4 @@ public class DifferentNameSerializer implements JsonSerializer<SourceClass> {
 
         return jObject;
     }
-
 }

@@ -64,7 +64,7 @@ public class GsonSerializationTest {
     }
 
     @Test
-    public void givenUsingCustomDeserializer_whenFieldNotMatchesCriteria_thenIgnored() {
+    public void givenUsingCustomSerializer_whenFieldNotMatchesCriteria_thenIgnored() {
         final SourceClass sourceObject = new SourceClass(-1, "minus 1");
         final GsonBuilder gsonBuildr = new GsonBuilder();
         gsonBuildr.registerTypeAdapter(SourceClass.class, new IgnoringFieldsNotMatchingCriteriaSerializer());
